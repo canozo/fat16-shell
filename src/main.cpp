@@ -8,6 +8,7 @@
 #include "boot_sector.h"
 #include "dir_entry.h"
 #include "ls.h"
+#include "cat.h"
 
 using std::cin;
 using std::cout;
@@ -72,7 +73,7 @@ void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs) {
   string current_dir = "/";
 
   while (true) {
-    cout << "$ ";
+    cout << current_dir << ": $ ";
     getline(cin, command);
     commands = split(command);
 
@@ -93,6 +94,7 @@ void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs) {
         if (commands.size() == 2) {
           // cat archivo
           // imprime los datos del archivo de texto
+          cout << cat(file, fat_pt, bs, current_dir, commands[1]);
 
         } else {
           // cat > archivo.txt
