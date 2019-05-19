@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) {
         // args[0]: nombre de la imagen
         try {
-            RandomAccessFile img = new RandomAccessFile(new File(args[0]), "rw");
+            RandomAccessFile img = new RandomAccessFile(new File(args[0]), "rws");
             shell(img);
             img.close();
         } catch (FileNotFoundException e) {
@@ -19,13 +19,16 @@ public class Main {
         }
     }
 
-    private static void shell(RandomAccessFile img) {
+    private static void shell(RandomAccessFile img) throws IOException {
         // shell
         // al iniciar la consola, el directorio actual es el directorio raíz
+        FAT16 fat = new FAT16(img);
+
         String[] commands;
         Scanner cin = new Scanner(System.in);
 
         while (true) {
+            System.out.print("$ ");
             commands = cin.nextLine().trim().split("\\s+");
 
             // salir si ingreso "exit"
