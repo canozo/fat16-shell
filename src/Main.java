@@ -21,6 +21,7 @@ public class Main {
 
     private static void shell(RandomAccessFile img) {
         // shell
+        // al iniciar la consola, el directorio actual es el directorio raíz
         String[] commands;
         Scanner cin = new Scanner(System.in);
 
@@ -38,24 +39,25 @@ public class Main {
                 switch (commands[0]) {
                     case "ls":
                         // ls -l
-                        System.out.println("ls -l");
+                        // imprime todos los metadatos de los archivos en el directorio actual
+                        // imprime los archivos del directorio raíz
                         break;
                     case "cat":
                         if (commands.length == 2) {
                             // cat archivo
-                            System.out.println("cat archivo");
+                            // imprime los datos del archivo de texto
                         } else {
                             // cat > archivo.txt
-                            System.out.println("cat > archivo.txt");
+                            // crea el archivo a.txt en el directorio actual
                         }
                         break;
                     case "mkdir":
                         // mkdir DIR
-                        System.out.println("mkdir DIR");
+                        // crea el directorio DIR en el directorio actual
                         break;
                     case "cd":
                         // cd DIR
-                        System.out.println("cd DIR");
+                        // se mueve al directorio DIR y este es el directorio actual
                         break;
                     default:
                         // ???
