@@ -7,6 +7,7 @@
 #include "part_table.h"
 #include "boot_sector.h"
 #include "dir_entry.h"
+#include "ls.h"
 
 using std::cin;
 using std::cout;
@@ -14,7 +15,7 @@ using std::stringstream;
 using std::vector;
 using std::string;
 
-void shell(FILE *, boot_sector_t *);
+void shell(FILE *, part_table_t *, boot_sector_t *);
 vector<string> split(string);
 bool validate(vector<string>);
 
@@ -58,24 +59,17 @@ int main(int argc, char *argv[]) {
   // leer la data del boot sector
   fread(&bs, sizeof(boot_sector_t), 1, file);
 
-  shell(file, &bs);
-
-  long int offset = (bs.reserved_sectors - 1 + bs.fat_size_sectors * bs.number_of_fats) * bs.sector_size;
-  fseek(file, offset, SEEK_CUR);
-
-  dir_entry_t entry;
-  for (int j = 0; j < bs.root_dir_entries; j += 1) {
-    fread(&entry, sizeof(entry), 1, file);
-    // print_file_info(&entry);
-  }
+  shell(file, &fat_pt, &bs);
 
   fclose(file);
   return 0;
 }
 
-void shell(FILE *file, boot_sector_t *bs) {
+void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs) {
   string command;
   vector<string> commands;
+
+  string current_dir = "/";
 
   while (true) {
     cout << "$ ";
@@ -93,20 +87,26 @@ void shell(FILE *file, boot_sector_t *bs) {
         // ls -l
         // imprime todos los metadatos de los archivos en el directorio actual
         // imprime los archivos del directorio raíz
+        cout << ls(file, fat_pt, bs, current_dir);
+
       } else if (commands[0] == "cat") {
         if (commands.size() == 2) {
           // cat archivo
           // imprime los datos del archivo de texto
+
         } else {
           // cat > archivo.txt
           // crea el archivo a.txt en el directorio actual
+
         }
       } else if (commands[0] == "mkdir") {
         // mkdir DIR
         // crea el directorio DIR en el directorio actual
+
       } else if (commands[0] == "cd") {
         // cd DIR
         // se mueve al directorio DIR y este es el directorio actual
+
       } else {
         // ???
         cout << "??? inesperado\n";
