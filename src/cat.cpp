@@ -8,7 +8,7 @@ using std::cout;
 
 using std::stringstream;
 
-string cat(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, string cd, string filename) {
+string cat(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *utils, string cd, string filename) {
   stringstream res("");
   // ver si el archivo se encuentra en el cd
   if (cd == "/") {

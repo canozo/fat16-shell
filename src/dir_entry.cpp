@@ -92,3 +92,28 @@ string file_name(dir_entry_t *entry) {
 
   return res.str();
 }
+
+string file_read(dir_entry_t *entry, fat_utils_t *utils, FILE *file) {
+  stringstream res("");
+  unsigned char buffer[4096];
+
+  unsigned long fat_start = utils->fat_start;
+  unsigned long data_start = utils->data_start;
+  unsigned long cluster_size = utils->cluster_size;
+  unsigned short cluster = entry->starting_cluster;
+
+  size_t bytes_read;
+  size_t bytes_to_read;
+  size_t file_left = entry->file_size;
+  size_t cluster_left = utils->cluster_size;
+
+  // buscar el primer cluster
+  fseek(file, data_start + cluster_size * (cluster - 2), SEEK_SET);
+
+  // leer el archvo hasta que se termine o encontremos el cluster 0xFFFF
+  while(file_left > 0 && cluster != 0xFFFF) {
+
+  }
+
+  return res.str();
+}

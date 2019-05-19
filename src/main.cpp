@@ -9,6 +9,7 @@
 #include "dir_entry.h"
 #include "ls.h"
 #include "cat.h"
+#include "fat_utils.h"
 
 using std::cin;
 using std::cout;
@@ -16,7 +17,7 @@ using std::stringstream;
 using std::vector;
 using std::string;
 
-void shell(FILE *, part_table_t *, boot_sector_t *);
+void shell(FILE *, part_table_t *, boot_sector_t *, fat_utils_t *);
 vector<string> split(string);
 bool validate(vector<string>);
 
@@ -59,14 +60,20 @@ int main(int argc, char *argv[]) {
   fseek(file, 512 * fat_pt.start_sector, SEEK_SET);
   // leer la data del boot sector
   fread(&bs, sizeof(boot_sector_t), 1, file);
+  // calcular offsets y constantes
+  fat_utils_t utils;
+  utils.fat_start = ftell(file) + (bs.reserved_sectors-1) * bs.sector_size;
+  utils.root_start = utils.fat_start + bs.fat_size_sectors * bs.number_of_fats * bs.sector_size;
+  utils.data_start = utils.root_start + bs.root_dir_entries * sizeof(boot_sector_t);
+  utils.cluster_size = bs.sector_size * bs.sectors_per_cluster;
 
-  shell(file, &fat_pt, &bs);
+  shell(file, &fat_pt, &bs, &utils);
 
   fclose(file);
   return 0;
 }
 
-void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs) {
+void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *utils) {
   string command;
   vector<string> commands;
 
@@ -94,7 +101,7 @@ void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs) {
         if (commands.size() == 2) {
           // cat archivo
           // imprime los datos del archivo de texto
-          cout << cat(file, fat_pt, bs, current_dir, commands[1]);
+          cout << cat(file, fat_pt, bs, utils, current_dir, commands[1]);
 
         } else {
           // cat > archivo.txt

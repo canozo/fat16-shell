@@ -2,6 +2,7 @@
 #define DIR_ENTRY_H
 
 #include <string>
+#include "fat_utils.h"
 
 using std::string;
 
@@ -21,5 +22,6 @@ typedef struct dir_entry_t {
 
 string file_info(dir_entry_t *);
 string file_name(dir_entry_t *);
+string file_read(dir_entry_t *, fat_utils_t *, FILE *);
 
 #endif
