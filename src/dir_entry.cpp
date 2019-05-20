@@ -109,6 +109,66 @@ bool compare_file_name(dir_entry_t *entry, string filename) {
   return strcmp(namebuff, name) == 0 && strcmp(extbuff, ext) == 0;
 }
 
+bool compare_dir_name(dir_entry_t *entry, string filename) {
+  switch(entry->attributes) {
+    case 0x10:
+      break; // es subdirectorio
+
+    default:
+      return false;
+  }
+
+  // datos del dir entry en el fs
+  char namebuff[9] = "        ";
+  char extbuff[4] = "   ";
+  memcpy(namebuff, entry->filename, 8);
+  memcpy(extbuff, entry->ext, 3);
+
+  // datos del filename
+  char name[9] = "        ";
+  char ext[4] = "   ";
+  size_t punto = filename.find('.');
+
+  if (punto != string::npos) {
+    // si tiene punto (hay extension)
+    memcpy(name, filename.c_str(), punto);
+    memcpy(ext, filename.c_str() + punto + 1, 3);
+  } else if (filename.size() <= 8) {
+    // no hay extension, menor que 8
+    memcpy(name, filename.c_str(), filename.size());
+  } else {
+    // no hay extension, tomamos los primeros 8 caracteres
+    memcpy(name, filename.c_str(), 8);
+  }
+
+  return strcmp(namebuff, name) == 0 && strcmp(extbuff, ext) == 0;
+}
+
+string get_dir_name(string filename) {
+  char name[9] = "        ";
+  size_t punto = filename.find('.');
+
+  if (punto != string::npos) {
+    // si tiene punto (hay extension)
+    memcpy(name, filename.c_str(), punto);
+  } else if (filename.size() <= 8) {
+    // no hay extension, menor que 8
+    memcpy(name, filename.c_str(), filename.size());
+  } else {
+    // no hay extension, tomamos los primeros 8 caracteres
+    memcpy(name, filename.c_str(), 8);
+  }
+
+  // trimmear los espacios en blanco al final
+  string strname = name;
+  size_t espacio = strname.find(' ');
+  if (espacio == string::npos) {
+    return strname;
+  } else {
+    return strname.substr(0, espacio);
+  }
+}
+
 string file_read(dir_entry_t *entry, fat_utils_t *utils, FILE *file) {
   stringstream res(stringstream::out | stringstream::binary);
   unsigned char buffer[4096];
