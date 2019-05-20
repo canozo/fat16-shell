@@ -10,11 +10,8 @@ string cat(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *uti
 
   // ver si el archivo se encuentra en el cd
   if (cd == "/") {
-    // seek al inicio del boot sector
-    fseek(file, 512 * fat_pt->start_sector, SEEK_SET);
-    // seek a los dir entries en root
-    long int offset = (bs->reserved_sectors - 1 + bs->fat_size_sectors * bs->number_of_fats) * bs->sector_size;
-    fseek(file, offset, SEEK_CUR);
+    // seek al inicio del dir root
+    fseek(file, utils->root_start, SEEK_SET);
 
     dir_entry_t entry;
     string entry_fn;

@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
   fat_utils_t utils;
   utils.fat_start = ftell(file) + (bs.reserved_sectors-1) * bs.sector_size;
   utils.root_start = utils.fat_start + bs.fat_size_sectors * bs.number_of_fats * bs.sector_size;
-  utils.data_start = utils.root_start + bs.root_dir_entries * sizeof(fat_utils_t);
+  utils.data_start = utils.root_start + bs.root_dir_entries * sizeof(dir_entry_t);
   utils.cluster_size = bs.sector_size * bs.sectors_per_cluster;
 
   shell(file, &fat_pt, &bs, &utils);

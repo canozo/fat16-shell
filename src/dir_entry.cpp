@@ -94,8 +94,9 @@ string file_name(dir_entry_t *entry) {
 }
 
 string file_read(dir_entry_t *entry, fat_utils_t *utils, FILE *file) {
-  stringstream res("");
+  stringstream res(stringstream::out | stringstream::binary);
   unsigned char buffer[4096];
+  unsigned char subbuffer[4096];
 
   unsigned long fat_start = utils->fat_start;
   unsigned long data_start = utils->data_start;
@@ -124,13 +125,13 @@ string file_read(dir_entry_t *entry, fat_utils_t *utils, FILE *file) {
     }
 
     bytes_read = fread(buffer, 1, bytes_to_read, file);
-    res << buffer;
+    res.write((const char *) buffer, bytes_read);
 
     cluster_left -= bytes_read;
     file_left -= bytes_read;
 
     // obtener el siguiente cluster de la FAT
-    if(cluster_left == 0) {
+    if (cluster_left == 0) {
       fseek(file, fat_start + cluster * 2, SEEK_SET);
       fread(&cluster, 2, 1, file);
 
