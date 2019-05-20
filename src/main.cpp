@@ -109,6 +109,7 @@ void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *uti
         } else {
           // cat > archivo.txt
           // crea el archivo a.txt en el directorio actual
+          cout << "Ingrese \":q\" para volver.\n";
           cout << cat2(file, fat_pt, bs, utils, current_dir, commands[2], write_cat());
 
         }
