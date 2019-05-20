@@ -210,8 +210,6 @@ string mkdir(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *u
         fseek(file, utils->data_start + utils->cluster_size * (parent.starting_cluster - 2) + entry_num * sizeof(dir_entry_t), SEEK_SET);
         fwrite(&new_entry, sizeof(dir_entry_t), 1, file);
 
-        printf("debug: new entry: %s\n", file_info(&new_entry).c_str());
-
         // ir a la posicion del cluster vacio y escribir el cluster
         fseek(file, utils->data_start + utils->cluster_size * cluster, SEEK_SET);
 
