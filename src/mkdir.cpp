@@ -221,6 +221,7 @@ string mkdir(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *u
         fwrite(&new_entry, sizeof(dir_entry_t), 1, file);
 
         // escribir ..
+        memcpy(parent.filename, "..      ", 8);
         fwrite(&parent, sizeof(dir_entry_t), 1, file);
 
       } else {

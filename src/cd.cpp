@@ -72,8 +72,12 @@ string cd(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *util
 
       if (compare_dir_name(&entry, dest)) {
         // lo encontro, wey
-        res.str("");
-        res << exit_path(subdirs);
+        if (dest == "..") {
+          res.str("");
+          res << exit_path(subdirs);
+        } else {
+          res << '/' << dest;
+        }
         break;
       }
     }
