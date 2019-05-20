@@ -9,6 +9,7 @@
 #include "cat.h"
 #include "fat_utils.h"
 #include "cd.h"
+#include "mkdir.h"
 
 using std::cin;
 using std::cout;
@@ -32,7 +33,7 @@ int main(int argc, char *argv[]) {
   }
 
   // abrir archivo
-  file = fopen(filename, "rb");
+  file = fopen(filename, "rb+");
   // seek a la tabla de particiones
   fseek(file, 0x1BE, SEEK_SET);
   // leer las 4 entradas de la tabla de particiones
@@ -110,6 +111,12 @@ void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *uti
       } else if (commands[0] == "mkdir") {
         // mkdir DIR
         // crea el directorio DIR en el directorio actual
+        if (commands[1] == "." || commands[1] == "..") {
+          cout << "Nombre de directorio [" << commands[1] << "] reservado.\n\n";
+          continue;
+        }
+
+        cout << mkdir(file, fat_pt, bs, utils, current_dir, commands[1]);
 
       } else if (commands[0] == "cd") {
         // cd DIR
