@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <stdio.h>
 #include "part_table.h"
 #include "boot_sector.h"
 #include "dir_entry.h"
@@ -10,6 +11,7 @@
 #include "fat_utils.h"
 #include "cd.h"
 #include "mkdir.h"
+#include "cat2.h"
 
 using std::cin;
 using std::cout;
@@ -106,6 +108,7 @@ void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *uti
         } else {
           // cat > archivo.txt
           // crea el archivo a.txt en el directorio actual
+          cout << cat2(file, fat_pt, bs, utils, current_dir, commands[2]);
 
         }
       } else if (commands[0] == "mkdir") {

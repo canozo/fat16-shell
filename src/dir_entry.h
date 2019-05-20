@@ -24,8 +24,10 @@ string file_info(dir_entry_t *);
 bool compare_file_name(dir_entry_t *, string);
 bool compare_dir_name(dir_entry_t *, string);
 string get_dir_name(string);
+void get_file_name(string, char *, char *);
 string file_read(dir_entry_t *, fat_utils_t *, FILE *);
 void init_de_directory(dir_entry_t *);
 void init_de_root(dir_entry_t *);
+void init_de_file(dir_entry_t *);
 
 #endif
