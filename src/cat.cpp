@@ -1,15 +1,13 @@
-#include <iostream>
-
 #include <sstream>
 #include "dir_entry.h"
 #include "cat.h"
-
-using std::cout;
 
 using std::stringstream;
 
 string cat(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *utils, string cd, string filename) {
   stringstream res("");
+  bool found = false;
+
   // ver si el archivo se encuentra en el cd
   if (cd == "/") {
     // seek al inicio del boot sector
@@ -31,14 +29,19 @@ string cat(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *uti
 
       if (entry_fn == filename) {
         // lo encontro, wey
-        cout << "Lo encontre wey!\n";
+        found = true;
+        res << file_read(&entry, utils, file) << "\n\n";
+        break;
       }
     }
   } else {
     // no es el directorio raiz
   }
+
   // si no se encuentra, devolver "No se encontro el archivo"
-  // si se encuentra, leer los contenidos y devolverlos
+  if (!found) {
+    res << "No se encontro el archivo [" << filename << "] en el directorio [" << cd << "].\n\n";
+  }
 
   return res.str();
 }
