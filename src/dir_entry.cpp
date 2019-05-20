@@ -193,6 +193,16 @@ string file_read(dir_entry_t *entry, fat_utils_t *utils, FILE *file) {
 
   // buscar el primer cluster
   fseek(file, data_start + cluster_size * (cluster - 2), SEEK_SET);
+  dir_entry_t debug_test, debug_other_test;
+  fread(&debug_test, sizeof(debug_test), 1, file);
+  fseek(file, data_start + cluster_size * cluster, SEEK_SET);
+  fread(&debug_other_test, sizeof(debug_other_test), 1, file);
+  fseek(file, data_start + cluster_size * (cluster - 2), SEEK_SET);
+
+  printf("debug: cluster %u\n", cluster);
+  printf("debug: file after: %s\n", file_info(&debug_other_test).c_str());
+  printf("debug: cluster - 2 %u\n", cluster - 2);
+  printf("debug: file bfore: %s\n", file_info(&debug_test).c_str());
 
   // leer el archvo hasta que se termine o encontremos el cluster 0xFFFF
   while (file_left > 0 && cluster != 0xFFFF) {
@@ -227,14 +237,18 @@ string file_read(dir_entry_t *entry, fat_utils_t *utils, FILE *file) {
 }
 
 void init_de_directory(dir_entry_t *entry) {
-  for (int i = 0; i < 8; i += 1) {
-    entry->filename[i] = ' ';
-  }
-
-  for (int i = 0; i < 3; i += 1) {
-    entry->ext[i] = ' ';
-  }
+  memcpy(entry->filename, "        ", 8);
+  memcpy(entry->ext, "   ", 3);
 
   entry->attributes = 0x10;
   entry->file_size = 0;
+}
+
+void init_de_root(dir_entry_t *entry) {
+  memcpy(entry->filename, "..      ", 8);
+  memcpy(entry->ext, "   ", 3);
+
+  entry->attributes = 0x10;
+  entry->file_size = 0;
+  entry->starting_cluster = 0;
 }

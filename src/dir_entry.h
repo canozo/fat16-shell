@@ -9,14 +9,14 @@ using std::string;
 // partition table del disco
 #pragma pack(push, 1)
 typedef struct dir_entry_t {
-    unsigned char filename[8];
-    unsigned char ext[3];
-    unsigned char attributes;
-    unsigned char reserved[10];
-    unsigned short modify_time;
-    unsigned short modify_date;
-    unsigned short starting_cluster;
-    unsigned long file_size;
+  unsigned char filename[8];
+  unsigned char ext[3];
+  unsigned char attributes;
+  unsigned char reserved[10];
+  unsigned short modify_time;
+  unsigned short modify_date;
+  unsigned short starting_cluster;
+  unsigned long file_size;
 } dir_entry_t;
 #pragma pack(pop)
 
@@ -26,5 +26,6 @@ bool compare_dir_name(dir_entry_t *, string);
 string get_dir_name(string);
 string file_read(dir_entry_t *, fat_utils_t *, FILE *);
 void init_de_directory(dir_entry_t *);
+void init_de_root(dir_entry_t *);
 
 #endif

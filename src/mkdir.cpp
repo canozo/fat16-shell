@@ -19,7 +19,7 @@ string mkdir(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *u
     dir_entry_t entry;
     for (int i = 0; i < bs->root_dir_entries; i += 1) {
       // buscar si ya existe el directorio
-      fread(&entry, sizeof(entry), 1, file);
+      fread(&entry, sizeof(dir_entry_t), 1, file);
 
       if (compare_dir_name(&entry, dir)) {
         // ya existe
@@ -39,7 +39,7 @@ string mkdir(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *u
       fseek(file, utils->root_start, SEEK_SET);
       int entry_num;
       for (entry_num = 0; entry_num < bs->root_dir_entries; entry_num += 1) {
-        fread(&entry, sizeof(entry), 1, file);
+        fread(&entry, sizeof(dir_entry_t), 1, file);
 
         if (entry.filename[0] == 0x00) {
           found_entry = true;
@@ -54,7 +54,7 @@ string mkdir(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *u
 
         int i;
         for (i = 0; i < 512; i += 1) {
-          fread(&entry, sizeof(entry), 1, file);
+          fread(&entry, sizeof(dir_entry_t), 1, file);
 
           if (entry.filename[0] == 0x00) {
             continue; // entry vacio
@@ -78,8 +78,25 @@ string mkdir(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *u
         string new_filename = get_dir_name(dir);
         memcpy(new_entry.filename, new_filename.c_str(), new_filename.size());
 
-        printf("new dir entry: %s\n", file_info(&new_entry).c_str());
-        // TODO num de cluster
+        // el valor de cluster inicial es cluster + 2, pero se escribe en cluster
+        new_entry.starting_cluster = cluster + 2;
+
+        // ir a la posicion del dir entry vacio y escribir el dir entry
+        fseek(file, utils->root_start + entry_num * sizeof(dir_entry_t), SEEK_SET);
+        fwrite(&new_entry, sizeof(dir_entry_t), 1, file);
+
+        // ir a la posicion del cluster vacio y escribir el cluster
+        fseek(file, utils->data_start + utils->cluster_size * cluster, SEEK_SET);
+
+        // como es un directorio, hay que escibir la tabla de dir entries
+        // escribir .
+        memcpy(new_entry.filename, ".       ", 8);
+        fwrite(&new_entry, sizeof(dir_entry_t), 1, file);
+
+        // escribir ..
+        dir_entry_t parent;
+        init_de_root(&parent);
+        fwrite(&parent, sizeof(dir_entry_t), 1, file);
 
       } else {
         res << "No se pudo crear el directorio [" << dir << "] en el directorio [" << cd << "].\n";
