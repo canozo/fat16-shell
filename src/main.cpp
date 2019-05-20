@@ -96,7 +96,7 @@ void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *uti
       if (commands[0] == "ls") {
         // ls -l
         // imprime todos los metadatos de los archivos en el directorio actual
-        cout << ls(file, fat_pt, bs, current_dir);
+        cout << ls(file, fat_pt, bs, utils, current_dir);
 
       } else if (commands[0] == "cat") {
         if (commands.size() == 2) {
@@ -117,11 +117,13 @@ void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *uti
         // cd DIR
         // se mueve al directorio DIR y este es el directorio actual
         new_dir = cd(file, fat_pt, bs, utils, current_dir, commands[1]);
+
         if (current_dir == new_dir) {
           cout << "No se encontro el directorio [" << commands[1] << "] en el directorio [" << current_dir << "].\n\n";
         } else {
           current_dir = new_dir;
         }
+
       } else {
         // ???
         cout << "??? inesperado\n";

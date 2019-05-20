@@ -187,15 +187,15 @@ string file_read(dir_entry_t *entry, fat_utils_t *utils, FILE *file) {
   fseek(file, data_start + cluster_size * (cluster - 2), SEEK_SET);
 
   // leer el archvo hasta que se termine o encontremos el cluster 0xFFFF
-  while(file_left > 0 && cluster != 0xFFFF) {
+  while (file_left > 0 && cluster != 0xFFFF) {
     bytes_to_read = sizeof(buffer);
 
     // no pasarse del limite
-    if(bytes_to_read > file_left) {
+    if (bytes_to_read > file_left) {
       bytes_to_read = file_left;
     }
 
-    if(bytes_to_read > cluster_left) {
+    if (bytes_to_read > cluster_left) {
       bytes_to_read = cluster_left;
     }
 
