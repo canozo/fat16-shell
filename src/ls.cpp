@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include <sstream>
 #include <vector>
 #include "dir_entry.h"

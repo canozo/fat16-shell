@@ -18,5 +18,6 @@ typedef struct fat_utils_t {
 #pragma pack(pop)
 
 vector<string> split_path(string);
+string exit_path(vector<string>);
 
 #endif

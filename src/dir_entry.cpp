@@ -127,18 +127,26 @@ bool compare_dir_name(dir_entry_t *entry, string filename) {
   // datos del filename
   char name[9] = "        ";
   char ext[4] = "   ";
-  size_t punto = filename.find('.');
 
-  if (punto != string::npos) {
-    // si tiene punto (hay extension)
-    memcpy(name, filename.c_str(), punto);
-    memcpy(ext, filename.c_str() + punto + 1, 3);
-  } else if (filename.size() <= 8) {
-    // no hay extension, menor que 8
-    memcpy(name, filename.c_str(), filename.size());
+  if (filename == ".") {
+    name[0] = '.';
+  } else if (filename == "..") {
+    name[0] = '.';
+    name[1] = '.';
   } else {
-    // no hay extension, tomamos los primeros 8 caracteres
-    memcpy(name, filename.c_str(), 8);
+    size_t punto = filename.find('.');
+
+    if (punto != string::npos) {
+      // si tiene punto (hay extension)
+      memcpy(name, filename.c_str(), punto);
+      memcpy(ext, filename.c_str() + punto + 1, 3);
+    } else if (filename.size() <= 8) {
+      // no hay extension, menor que 8
+      memcpy(name, filename.c_str(), filename.size());
+    } else {
+      // no hay extension, tomamos los primeros 8 caracteres
+      memcpy(name, filename.c_str(), 8);
+    }
   }
 
   return strcmp(namebuff, name) == 0 && strcmp(extbuff, ext) == 0;

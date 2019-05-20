@@ -16,3 +16,18 @@ vector<string> split_path(string path) {
 
   return subdirs;
 }
+
+string exit_path(vector<string> path) {
+  // recibe un path de directorios y le quita el ultimo directorio:
+  // ["SUBDIR, "TEST"] => "/SUBDIR"
+  stringstream res("");
+  res << "/";
+  for (int i = 0; i < path.size() - 1; i += 1) {
+    if (i > 0) {
+      res << "/";
+    }
+    res << path[i];
+  }
+
+  return res.str();
+}

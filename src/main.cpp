@@ -2,8 +2,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <stdio.h>
-#include <stdlib.h>
 #include "part_table.h"
 #include "boot_sector.h"
 #include "dir_entry.h"
@@ -116,6 +114,10 @@ void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *uti
       } else if (commands[0] == "cd") {
         // cd DIR
         // se mueve al directorio DIR y este es el directorio actual
+        if (commands[1] == ".") {
+          continue;
+        }
+
         new_dir = cd(file, fat_pt, bs, utils, current_dir, commands[1]);
 
         if (current_dir == new_dir) {
