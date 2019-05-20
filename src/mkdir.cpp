@@ -71,6 +71,16 @@ string mkdir(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *u
 
       if (found_entry && found_cluster) {
         // crear dir entry en root
+        dir_entry_t new_entry;
+        init_de_directory(&new_entry);
+
+        // copiar dir al filename
+        string new_filename = get_dir_name(dir);
+        memcpy(new_entry.filename, new_filename.c_str(), new_filename.size());
+
+        printf("new dir entry: %s\n", file_info(&new_entry).c_str());
+        // TODO num de cluster
+
       } else {
         res << "No se pudo crear el directorio [" << dir << "] en el directorio [" << cd << "].\n";
         res << "found_entry: " << found_entry << ", found_cluster: " << found_cluster << ".\n";

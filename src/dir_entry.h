@@ -25,5 +25,6 @@ bool compare_file_name(dir_entry_t *, string);
 bool compare_dir_name(dir_entry_t *, string);
 string get_dir_name(string);
 string file_read(dir_entry_t *, fat_utils_t *, FILE *);
+void init_de_directory(dir_entry_t *);
 
 #endif

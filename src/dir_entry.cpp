@@ -225,3 +225,16 @@ string file_read(dir_entry_t *entry, fat_utils_t *utils, FILE *file) {
 
   return res.str();
 }
+
+void init_de_directory(dir_entry_t *entry) {
+  for (int i = 0; i < 8; i += 1) {
+    entry->filename[i] = ' ';
+  }
+
+  for (int i = 0; i < 3; i += 1) {
+    entry->ext[i] = ' ';
+  }
+
+  entry->attributes = 0x10;
+  entry->file_size = 0;
+}
