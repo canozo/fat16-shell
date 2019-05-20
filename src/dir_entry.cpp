@@ -267,5 +267,4 @@ void init_de_file(dir_entry_t *entry) {
   memcpy(entry->ext, "   ", 3);
 
   entry->attributes = 0x00;
-  entry->file_size = 0;
 }

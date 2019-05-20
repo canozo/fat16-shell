@@ -8,6 +8,6 @@
 
 using std::string;
 
-string cat2(FILE *, part_table_t *, boot_sector_t *, fat_utils_t *, string, string);
+string cat2(FILE *, part_table_t *, boot_sector_t *, fat_utils_t *, string, string, string);
 
 #endif

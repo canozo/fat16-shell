@@ -6,7 +6,7 @@
 using std::stringstream;
 using std::vector;
 
-string cat2(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *utils, string cd, string filename) {
+string cat2(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *utils, string cd, string filename, string text) {
   stringstream res("");
   bool found = false;
 
@@ -82,6 +82,9 @@ string cat2(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *ut
         memcpy(new_entry.filename, new_filename, 8);
         memcpy(new_entry.ext, new_ext, 3);
 
+        // size
+        new_entry.file_size = text.size();
+
         // el valor de cluster inicial es cluster + 2, pero se escribe en cluster
         new_entry.starting_cluster = cluster + 2;
 
@@ -89,13 +92,11 @@ string cat2(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *ut
         fseek(file, utils->root_start + entry_num * sizeof(dir_entry_t), SEEK_SET);
         fwrite(&new_entry, sizeof(dir_entry_t), 1, file);
 
-        printf("file: %s\n", file_info(&new_entry).c_str());
-
         // ir a la posicion del cluster vacio y escribir el cluster
         fseek(file, utils->data_start + utils->cluster_size * cluster, SEEK_SET);
 
-        // como es un archivo, escribimos caracteres nulos
-        fwrite("1", 2, sizeof(dir_entry_t) / 2, file);
+        // escribimos al archivo
+        fwrite(text.c_str(), new_entry.file_size, 1, file);
 
       } else {
         res << "No se pudo crear el archivo [" << filename << "] en el directorio [" << cd << "].\n";
@@ -206,6 +207,9 @@ string cat2(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *ut
         memcpy(new_entry.filename, new_filename, 8);
         memcpy(new_entry.ext, new_ext, 3);
 
+        // size
+        new_entry.file_size = text.size();
+
         // el valor de cluster inicial es cluster + 2, pero se escribe en cluster
         new_entry.starting_cluster = cluster + 2;
 
@@ -216,8 +220,8 @@ string cat2(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *ut
         // ir a la posicion del cluster vacio y escribir el cluster
         fseek(file, utils->data_start + utils->cluster_size * cluster, SEEK_SET);
 
-        // como es un archivo, escribimos caracteres nulos
-        fwrite("1", 2, sizeof(dir_entry_t) / 2, file);
+        // escribimos al archivo
+        fwrite(text.c_str(), new_entry.file_size, 1, file);
 
       } else {
         res << "No se pudo crear el archivo [" << filename << "] en el directorio [" << cd << "].\n";

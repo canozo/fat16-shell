@@ -22,6 +22,7 @@ using std::string;
 void shell(FILE *, part_table_t *, boot_sector_t *, fat_utils_t *);
 vector<string> split(string);
 bool validate(vector<string>);
+string write_cat();
 
 int main(int argc, char *argv[]) {
   FILE *file;
@@ -108,7 +109,7 @@ void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *uti
         } else {
           // cat > archivo.txt
           // crea el archivo a.txt en el directorio actual
-          cout << cat2(file, fat_pt, bs, utils, current_dir, commands[2]);
+          cout << cat2(file, fat_pt, bs, utils, current_dir, commands[2], write_cat());
 
         }
       } else if (commands[0] == "mkdir") {
@@ -195,4 +196,18 @@ bool validate(vector<string> commands) {
 
   // sintaxis correcta
   return true;
+}
+
+string write_cat() {
+  stringstream ss("");
+
+  string linea;
+  while (getline(cin, linea)) {
+    if (linea == ":q") {
+      break;
+    }
+    ss << linea << '\n';
+  }
+
+  return ss.str();
 }
