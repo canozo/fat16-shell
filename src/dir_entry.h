@@ -21,7 +21,7 @@ typedef struct dir_entry_t {
 #pragma pack(pop)
 
 string file_info(dir_entry_t *);
-string file_name(dir_entry_t *);
+bool compare_file_name(dir_entry_t *, string);
 string file_read(dir_entry_t *, fat_utils_t *, FILE *);
 
 #endif

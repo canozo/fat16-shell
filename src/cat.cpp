@@ -18,13 +18,8 @@ string cat(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *uti
     for (int i = 0; i < bs->root_dir_entries; i += 1) {
       // buscar en cada uno de los entries
       fread(&entry, sizeof(entry), 1, file);
-      entry_fn = file_name(&entry);
 
-      if (entry_fn == "") {
-        continue;
-      }
-
-      if (entry_fn == filename) {
+      if (compare_file_name(&entry, filename)) {
         // lo encontro, wey
         found = true;
         res << file_read(&entry, utils, file) << "\n\n";
