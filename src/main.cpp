@@ -126,14 +126,12 @@ void shell(FILE *file, part_table_t *fat_pt, boot_sector_t *bs, fat_utils_t *uti
       } else if (commands[0] == "cd") {
         // cd DIR
         // se mueve al directorio DIR y este es el directorio actual
-        if (commands[1] == ".") {
-          continue;
-        }
-
         new_dir = cd(file, fat_pt, bs, utils, current_dir, commands[1]);
 
-        if (current_dir == new_dir) {
+        if (current_dir == "/" && commands[1] == "." || current_dir == new_dir) {
           cout << "No se encontro el directorio [" << commands[1] << "] en el directorio [" << current_dir << "].\n\n";
+        } else if (commands[1] == ".") {
+          continue;
         } else {
           current_dir = new_dir;
         }
